@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <style>
+            .element { position: absolute; }
+        </style>
+        <script src="../src/phygine.js"></script>
+    </head>
+
+    <body>
+        <div id="physical-container">
+            <div class="element" id="element-0">0</div>
+            <div class="element" id="element-1">0</div>
+            <div class="element" id="element-2">0</div>
+            <div class="element" id="element-3">0</div>
+            <div class="element" id="element-4">0</div>
+        </div>
+
+        <script>
+            var containerDiv = document.getElementById('physical-container');
+            var container = new PhysicalContainer(containerDiv);
+            container.addForce(new Gravity({acceleration: new Vect(0, 1)}));
+            container.addForce(new Friction({acceleration: new Vect(0.975, 0.975)}));
+            for(var i=0; i <= 4; i++) {
+                var domElement = document.getElementById("element-"+i);
+                var phyElement = new PhysicalElement(domElement, {x:4000, y:2500});
+                container.add(phyElement);
+                var elasticOption = {
+                    position: { x: 100 + i * 100, y: 0 },
+                    size: 20
+                };
+                var elastic = new Elastic(elasticOption);
+                phyElement.addForce(elastic);
+                container.run();
+            }
+        </script>
+    </body>
+</html>
