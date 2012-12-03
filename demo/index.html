@@ -17,18 +17,18 @@
 
         <script>
             var containerDiv = document.getElementById('physical-container');
-            var container = new PhysicalContainer(containerDiv);
-            container.addForce(new Gravity({acceleration: new Vect(0, 1)}));
-            container.addForce(new Friction({acceleration: new Vect(0.975, 0.975)}));
+            var container = new Phygine.PhysicalContainer(containerDiv);
+            container.addForce(new Phygine.Gravity({acceleration: new Phygine.Vect(0, 1)}));
+            container.addForce(new Phygine.Friction({acceleration: new Phygine.Vect(0.975, 0.975)}));
             for(var i=0; i <= 4; i++) {
                 var domElement = document.getElementById("element-"+i);
-                var phyElement = new PhysicalElement(domElement, {x:4000, y:2500});
+                var phyElement = new Phygine.PhysicalElement(domElement, {x:4000, y:2500});
                 container.add(phyElement);
                 var elasticOption = {
                     position: { x: 100 + i * 100, y: 0 },
                     size: 20
                 };
-                var elastic = new Elastic(elasticOption);
+                var elastic = new Phygine.Elastic(elasticOption);
                 phyElement.addForce(elastic);
                 container.run();
             }
