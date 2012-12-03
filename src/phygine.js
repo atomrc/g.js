@@ -4,7 +4,17 @@
  * *******************/
 var Phygine = {};
 
-(function() {
+(function (exports) {
+  if (typeof module !== "undefined" && module.exports) {
+    module.exports = exports; // CommonJS
+  } else if (typeof define === "function") {
+    define(exports); // AMD
+  } else {
+    Phygine = exports; // <script>
+  }
+}((function () {
+    var exports = {};
+
     /*********************
      * SIMPLE VECTOR CLASS
      * *******************/
@@ -320,11 +330,13 @@ var Phygine = {};
         },
     };
 
-    Phygine.Vect = Vect;
-    Phygine.Gravity = Gravity;
-    Phygine.Friction = Friction;
-    Phygine.Elastic = Elastic;
-    Phygine.PhysicalContainer = PhysicalContainer;
-    Phygine.PhysicalElement = PhysicalElement;
+    exports.Vect = Vect;
+    exports.Gravity = Gravity;
+    exports.Friction = Friction;
+    exports.Elastic = Elastic;
+    exports.PhysicalContainer = PhysicalContainer;
+    exports.PhysicalElement = PhysicalElement;
 
-})();
+    return exports;
+
+}())));
