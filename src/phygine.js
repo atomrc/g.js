@@ -176,6 +176,7 @@ var Phygine = {};
     var PhysicalElement = function(domElement, position) {
         this.element = domElement;
         this.element.classList.add('physical-element');
+        this.element.style.position = "absolute";
         this.speed = new Vect(0, 0);
         this.position = new Vect(position.x, position.y);
         this.size = {};
@@ -276,6 +277,7 @@ var Phygine = {};
         this.height = parseInt(getComputedStyle(this.container, null).getPropertyValue('height'));
         this.width = parseInt(getComputedStyle(this.container, null).getPropertyValue('width'));
         this.container.classList.add('elasto-container');
+        this.container.style.position = "relative";
         this.elements = [];
         this.forces = [];
         this.raf = (raf()).bind(window);
