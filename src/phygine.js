@@ -187,10 +187,15 @@ var Phygine = {};
      * *******************/
     PhysicalElement = function (domElement, position) {
         this.element = domElement;
+        this.speed = new Vect(0, 0);
+        this.position = {};
+        if(position) {
+            this.position = new Vect(position.x, position.y);
+        } else {
+            this._computePosition();
+        }
         this.element.classList.add('physical-element');
         this.element.style.position = "absolute";
-        this.speed = new Vect(0, 0);
-        this.position = new Vect(position.x, position.y);
         this.size = {};
         this.forces = [];
         this.initEvents();
@@ -204,13 +209,18 @@ var Phygine = {};
         freezed: false,
         clientPosition: null,
 
+        _computePosition: function () {
+            var x = parseInt(window.getComputedStyle(this.element, null).getPropertyValue('left'), 10),
+                y = parseInt(window.getComputedStyle(this.element, null).getPropertyValue('top'), 10);
+            this.position = new Vect(x, y);
+        },
+
         initEvents: function () {
             var followClient, freeze, unfreeze;
 
             followClient = function (e) {
                 var newPosition     = new Vect(e.clientX, e.clientY),
                     diff            = this.clientPosition.subtract(newPosition);
-
                 this.position       = this.position.subtract(diff);
                 this.clientPosition = newPosition;
             }.bind(this);
