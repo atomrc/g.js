@@ -269,9 +269,9 @@ var Phygine = {};
             this.forces.push(force);
         },
 
-        setPosition: function (position) {
-            this.position.x = position.x;
-            this.position.y = position.y;
+        setPosition: function (x, y) {
+            this.position.x = x;
+            this.position.y = y;
         },
 
         getPosition: function () {
@@ -320,8 +320,7 @@ var Phygine = {};
         run: function () {
             this.update();
             this.render();
-            var frame = this.run.bind(this);
-            this.raf(frame);
+            this.raf(this.run.bind(this));
         },
 
         addForce: function (force) {
@@ -330,17 +329,15 @@ var Phygine = {};
 
         add: function (physicalElement) {
             var randomX = parseInt(Math.random() * this.width, 10);
-            physicalElement.setPosition({x: randomX, y: 0});
+            physicalElement.setPosition(randomX, 0);
             this.elements.push(physicalElement);
         },
 
         update: function () {
-            var elIndex,
-                element;
+            var elIndex;
             for (elIndex = 0; elIndex < this.elements.length; elIndex++) {
-                element = this.elements[elIndex];
-                this._applyForces(element);
-                element.update();
+                this._applyForces(this.elements[elIndex]);
+                this.elements[elIndex].update();
             }
         },
 
