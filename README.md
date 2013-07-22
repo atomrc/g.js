@@ -2,7 +2,7 @@ Phygine
 ============
 
 add some physical laws in your browser
-Live exemple http://thomasbelin.fr
+Live exemple http://find.thomasbelin.fr
 
 Create a place in your DOM where magic happens
 -----------------
