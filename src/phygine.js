@@ -1,4 +1,4 @@
-/*global browser:true, module, define*/
+/*global window, module, define*/
 /*********************
  * MAIN NAMESPACE
  * *******************/
@@ -37,23 +37,28 @@ var G = {};
                 f;
 
             for (e in this.elements) {
-                if (this.elements.hasOwnProperty(e)) {
-                    element = this.element[e];
+                element = this.elements[e];
 
-                    //apply global forces
-                    for (f in this.forces) {
-                        this.applyForce(element, this.forces[f]);
-                    }
+                //apply global forces
+                for (f in this.forces) {
+                    this.applyForce(element, this.forces[f]);
+                }
 
-                    //apply element specific forces
-                    for (f in element.forces) {
-                        this.applyForce(element, element.forces[f]);
-                    }
+                //apply element specific forces
+                for (f in element.forces) {
+                    this.applyForce(element, element.forces[f]);
                 }
             }
         },
 
         applyForce: function (element, force) {
+            element.speed.x = element.speed.x + force.dx;
+            element.speed.y = element.speed.y + force.dy;
+        },
+
+        run: function () {
+            this.frame();
+            window.requestAnimationFrame(this.run.bind(this));
         }
     };
 
