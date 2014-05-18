@@ -85,12 +85,7 @@ var G = {};
     };
 
     function CenteredForce(params) {
-        this.center = params.center || this.defaultValues.center;
-        this.stiffness = params.stiffness || this.defaultValues.stiffness;
-        this.offset = params.offset || this.defaultValues.offset;
-    }
-    CenteredForce.prototype = {
-        defaultValues: {
+        var defaultValues = {
             //point where the source of the force is
             center: { x: 0, y: 0 },
 
@@ -99,7 +94,13 @@ var G = {};
 
             //the distance under which the force has no power on points
             offset: 0
-        },
+        };
+
+        this.center = params.center || defaultValues.center;
+        this.stiffness = params.stiffness || defaultValues.stiffness;
+        this.offset = params.offset || defaultValues.offset;
+    }
+    CenteredForce.prototype = {
 
         apply: function (point) {
             var deltaX = this.center.x - point.position.x,
@@ -125,21 +126,32 @@ var G = {};
      * @return Point
      */
     function Point(params, render) {
-        this.position = params.position || this.defaultValues.position; //the initial position of the point
-        this.friction = params.friction || this.defaultValues.friction;
+        var defaultValues = {
+            position: { x: 0, y: 0 },
+
+            //The force that will try to compensate the force applied to the point
+            //a number between 0 and 1 that will scale the speed of the object
+            kineticFriction: 1,
+
+            staticFriction: 0
+        };
+        this.position = params.position || defaultValues.position; //the initial position of the point
+        this.kineticFriction = params.kineticFriction || defaultValues.kineticFriction;
+        this.staticFriction = params.staticFriction || defaultValues.staticFriction;
         this.speed = { dx: 0, dy: 0 }; //the initial speed of the point
         this.forces = []; //all the forces only applied to this point
         this.render = render.bind(this) || function () {};
     }
     Point.prototype = {
-        defaultValues: {
-            position: { x: 0, y: 0 },
-            friction: 1 //a number between 0 and 1 that will scale the speed of the object
-        },
 
         update: function update() {
-            this.position.x = this.position.x + (this.speed.dx * this.friction);
-            this.position.y = this.position.y + (this.speed.dy * this.friction);
+            //apply friction on the speed of the point
+            this.speed.dx *= this.kineticFriction;
+            this.speed.dy *= this.kineticFriction;
+
+            //update the position of the point
+            this.position.x = this.position.x + this.speed.dx;
+            this.position.y = this.position.y + this.speed.dy;
         }
     };
 
