@@ -28,6 +28,8 @@ var G = {};
         this.forces = [];
     }
     Container.prototype = {
+
+        paused: false,
         /**
          * update - apply all the forces to all the points
          * to compute the new speed of each point
@@ -65,11 +67,60 @@ var G = {};
             }
         },
 
+        /**
+         * run - a single run of the animation loop
+         *
+         * @return
+         */
         run: function run() {
-            this.update();
-            this.render();
-            window.requestAnimationFrame(this.run.bind(this));
+            this.update(); //update the state of the application
+            this.render(); //rendering the new computed step
+            if (!this.paused) {
+                window.requestAnimationFrame(this.run.bind(this));
+            }
             //setTimeout(this.run.bind(this), 300);
+        },
+
+        /**
+         * pause - pauses the animation loop
+         *
+         * @return
+         */
+        pause: function pause() {
+            this.paused = true;
+        },
+
+        /**
+         * restart - reset the state of the application to the initial state
+         * and relauch the animation loop (if paused)
+         *
+         * @return
+         */
+        restart: function restart() {
+            this.paused = false;
+            this.reset();
+            this.run();
+        },
+
+        resume: function resume() {
+            this.paused = false;
+            this.run();
+        },
+
+        /**
+         * reset - reset to the initial state of the application
+         * does not pause the animation
+         *
+         * @return
+         */
+        reset: function reset() {
+            for (var i in this.points) {
+                //reset eash single point of the container
+                this.points[i].reset();
+            }
+
+            //render the new state of the application
+            this.render();
         }
     };
 
@@ -145,6 +196,7 @@ var G = {};
             staticFriction: 0
         };
         this.position = params.position || defaultValues.position; //the initial position of the point
+        this.initPosition = { x: this.position.x, y: this.position.y };
         this.kineticFriction = params.kineticFriction || defaultValues.kineticFriction;
         this.staticFriction = params.staticFriction || defaultValues.staticFriction;
         this.speed = { dx: 0, dy: 0 }; //the initial speed of the point
@@ -153,6 +205,11 @@ var G = {};
     }
     Point.prototype = {
 
+        /**
+         * update - update the position of the point depending on its speed
+         *
+         * @return {void}
+         */
         update: function update() {
             //apply friction on the speed of the point
             this.speed.dx *= this.kineticFriction;
@@ -161,6 +218,18 @@ var G = {};
             //update the position of the point
             this.position.x = this.position.x + this.speed.dx;
             this.position.y = this.position.y + this.speed.dy;
+        },
+
+        /**
+         * reset - reset the point at its inital position and speed
+         *
+         * @return
+         */
+        reset: function reset() {
+            this.speed.dx = 0;
+            this.speed.dy = 0;
+            this.position.x = this.initPosition.x;
+            this.position.y = this.initPosition.y;
         }
     };
 
