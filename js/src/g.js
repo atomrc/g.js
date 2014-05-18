@@ -60,11 +60,25 @@ var G = {};
             }
         },
 
+        /**
+         * render - render a single step of the animation
+         *
+         * @return
+         */
         render: function render() {
             var p;
             for (p in this.points) {
                 this.points[p].render();
             }
+        },
+
+        /**
+         * isRunning - return the state of the animation loop
+         *
+         * @return {Boolean}
+         */
+        isRunning: function () {
+            return !this.paused;
         },
 
         /**
