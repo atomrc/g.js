@@ -30,6 +30,7 @@ var G = {};
     Container.prototype = {
 
         paused: false,
+        launched: false,
         /**
          * update - apply all the forces to all the points
          * to compute the new speed of each point
@@ -78,7 +79,7 @@ var G = {};
          * @return {Boolean}
          */
         isRunning: function () {
-            return !this.paused;
+            return this.launched && !this.paused;
         },
 
         /**
@@ -87,6 +88,7 @@ var G = {};
          * @return
          */
         run: function run() {
+            this.launched = true;
             this.update(); //update the state of the application
             this.render(); //rendering the new computed step
             if (!this.paused) {
