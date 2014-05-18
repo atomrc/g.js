@@ -85,7 +85,7 @@ var G = {};
     };
 
     function CenteredForce(params) {
-        var defaultValues = {
+        var defaults = {
             //point where the source of the force is
             center: { x: 0, y: 0 },
 
@@ -93,12 +93,15 @@ var G = {};
             stiffness: 1,
 
             //the distance under which the force has no power on points
-            offset: 0
+            offset: 0,
+
+            //the direction of the force (1 attract, -1 repel)
+            direction: 1
         };
 
-        this.center = params.center || defaultValues.center;
-        this.stiffness = params.stiffness || defaultValues.stiffness;
-        this.offset = params.offset || defaultValues.offset;
+        for (var i in defaults) {
+            this[i] = params[i] || defaults[i];
+        }
     }
     CenteredForce.prototype = {
 
@@ -106,15 +109,21 @@ var G = {};
             var deltaX = this.center.x - point.position.x,
                 deltaY = this.center.y - point.position.y,
                 dist = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2)),
-                ratio;
+                force;
+
+            //take one thousands of the distance as the base force
+            //the stiffness will adjust this force
+            force = (dist - this.offset) / 1000;
 
             //if the point is closer to the center of the force
             //than the given offset, then there is nothing to do
-            if (dist <= this.offset) { return; }
+            if (force <= 0) { return; }
 
-            ratio = (dist - this.offset) / this.offset;
-            point.speed.dx += ratio * this.stiffness * deltaX;
-            point.speed.dy += ratio * this.stiffness * deltaY;
+            //for a positive direction will increase the force the point is farther
+            //for a negative one will decrease the force if the point is farther
+            force = this.stiffness * Math.pow(force, this.direction);
+            point.speed.dx += this.direction * force * deltaX;
+            point.speed.dy += this.direction * force * deltaY;
         }
     };
 

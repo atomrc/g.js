@@ -121,13 +121,18 @@
         <script>
             var container = new G.Container(),
                 elements = document.querySelectorAll('.element'),
-                gravity = new G.GlobalForce(0, 0.5);
+                gravity = new G.GlobalForce(0, 0.5),
+                antigravityField = new G.CenteredForce({
+                    center: { x: 500, y: 500 },
+                    stiffness: 0.001,
+                    direction: -1
+                });
 
             for (var e = 0; e < elements.length; e++) {
                 var element = elements[e],
                     elastic = new G.CenteredForce({
                         center: { x: Math.random() * (500 - 100) + 100, y: Math.random() * (500 - 100) + 100 },
-                        stiffness: 0.001,
+                        stiffness: 0.05,
                         offset: 50
                     });
                     point = new G.Point({ x: 0, y: 0, staticFriction: 0.01, kineticFriction: 0.99}, function (el) {
@@ -142,6 +147,7 @@
             }
 
             container.forces.push(gravity);
+            container.forces.push(antigravityField);
             container.run();
         </script>
     </body>
