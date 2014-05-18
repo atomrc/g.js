@@ -97,23 +97,24 @@ var G = {};
          * @return
          */
         restart: function restart() {
-            this.paused = false;
             this.reset();
-            this.run();
+            this.resume();
         },
 
         resume: function resume() {
+            if (!this.paused) { return; }
             this.paused = false;
             this.run();
         },
 
         /**
          * reset - reset to the initial state of the application
-         * does not pause the animation
+         * also pauses the animation loop
          *
          * @return
          */
         reset: function reset() {
+            this.pause = true;
             for (var i in this.points) {
                 //reset eash single point of the container
                 this.points[i].reset();
