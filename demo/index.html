@@ -1,21 +1,50 @@
 <html>
     <head>
         <script src="../src/phygine.js"></script>
+        <style>
+            #physical-container {
+                position: relative;
+            }
+            .element {
+                position: absolute;
+            }
+        </style>
     </head>
 
     <body>
         <div id="physical-container">
             <div class="element" id="element-0">0</div>
-            <div class="element" id="element-1">0</div>
+            <!--<div class="element" id="element-1">0</div>
             <div class="element" id="element-2">0</div>
             <div class="element" id="element-3">0</div>
             <div class="element" id="element-4">0</div>
+            -->
         </div>
 
         <script>
-            var container = new G.Container();
-            container.elements.push(new G.Element({ x: 0, y: 0 }));
-            container.forces.push({ dx: 1, dy: 1 });
+            var container = new G.Container(),
+                elements = document.querySelectorAll('.element'),
+                gravity = new G.GlobalForce(0, 0.5);
+
+            for (var e = 0; e < elements.length; e++) {
+                var element = elements[e],
+                    elastic = new G.CenteredForce({
+                        center: { x: 100, y: 100 },
+                        stiffness: 0.001,
+                        offset: 100
+                    });
+                    point = new G.Point({ x: 0, y: 0, friction: 0.9}, function (el) {
+                        return function () {
+                            el.style.top = this.position.y;
+                            el.style.left = this.position.x;
+                        }
+                    }(element));
+
+                point.forces.push(elastic);
+                container.points.push(point);
+            }
+
+            container.forces.push(gravity);
             container.run();
         </script>
     </body>
