@@ -130,7 +130,7 @@ var G = {};
          * @return
          */
         reset: function reset() {
-            this.pause = true;
+            this.paused = true;
             for (var i in this.points) {
                 //reset eash single point of the container
                 this.points[i].reset();
